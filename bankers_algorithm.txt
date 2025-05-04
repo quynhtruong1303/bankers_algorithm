@@ -279,19 +279,16 @@ if __name__ == "__main__":
         visualize_available_log(available_log, sequence)
     else:
         print("\nSystem 2 is NOT in a safe state. Deadlock possible.")
-        
+    
         # Attempt recovery
-        finished_before_deadlock = [i for i in range(n_processes) if f'P{i}' not in sequence]
         blocked_processes = [f'P{i}' for i in range(n_processes) if f'P{i}' in sequence]
-
         print(f"Blocked processes causing deadlock: {', '.join(blocked_processes)}")
 
         safe, recovered_sequence, recovered_log = resource_preemption(available.copy(), allocation.copy(), need.copy(), maximum.copy(), blocked_processes.copy())
 
         if safe:
             print("System has been recovered to a safe state.")
-            final_sequence = finished_before_deadlock + [p for p in recovered_sequence if p not in finished_before_deadlock]
-            visualize_safe_sequence(final_sequence)
-            visualize_available_log(recovered_log, final_sequence)
+            visualize_safe_sequence(recovered_sequence)
+            visualize_available_log(recovered_log, recovered_sequence)
         else:
-            print("Deadlock recovery by resource preemption failed!")
+            print("Deadlock recovery failed.")
