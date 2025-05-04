@@ -27,7 +27,8 @@ def is_safe(available, allocation, need, n_processes):
                 allocated_in_this_round = True
         if not allocated_in_this_round:
             # Detect blocked processes that are waiting for resources
-            print(f"Processes that finished (in order): {', '.join([f'P{i}' for i in safe_sequence])}")
+            print(f"Processes that finished: {', '.join([f'P{i}' for i in safe_sequence])}")
+            print(f"Current available resources: {work}")
             for i in range(n_processes):
                 if not finish[i] and any(need[i] > work):
                     blocked_processes.append(f"P{i}")
@@ -146,6 +147,9 @@ def visualize_available_log(available_log, sequence):
     plt.tight_layout()
     plt.show()
 
+# --------------------------
+# 3. Deadlock Recovery
+# --------------------------
 def resource_preemption(available, allocation, need, maximum, blocked_processes):
     """
     Attempts to recover from deadlock by preempting resources from blocked processes.
@@ -162,6 +166,7 @@ def resource_preemption(available, allocation, need, maximum, blocked_processes)
             continue  # avoid retrying the same process
 
         tried.add(blocked_index)
+        print('-'*50)
         print(f"Preempting resources from blocked process {proc}")
 
         # Preempt resources
